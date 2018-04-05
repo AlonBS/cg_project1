@@ -35,15 +35,23 @@ struct Texture {
 
 class Mesh {
 public:
+
+	bool textured;
     /*  Mesh Data  */
     vector<Vertex> vertices;
     vector<GLuint> indices;
     vector<Texture> textures;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+    GLfloat shininess;
+
     GLuint VAO;
 
     /*  Functions  */
     // Constructor
-    Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures);
+    Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures, vector<glm::vec3>& colors, GLfloat shininess);
 
     // Render the mesh
     void draw(Program program);

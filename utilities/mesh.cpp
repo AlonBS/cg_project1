@@ -3,13 +3,39 @@
 
 #include <mesh.h>
 #include <vector>
+#include <glm/glm.hpp>
 
-Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures)
+
+
+inline void
+printVec3(const string& name, const glm::vec3& vec)
+{
+	cout << name << ": " << vec.x << "," << vec.y << "," << vec.z << endl;
+
+//	cout << name << " " << vec.x << " " << vec.y << " " << vec.z << endl;
+}
+
+
+Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> textures,
+		   vector<glm::vec3>& colors, GLfloat shininess)
 :VAO(GL_INVALID_INDEX), VBO(GL_INVALID_INDEX), EBO(GL_INVALID_INDEX)
 {
+
 	this->vertices = vertices;
 	this->indices = indices;
-	this->textures = textures;
+	if (textures.size() > 0) {
+		this->textures = textures;
+		textured = true;
+	}
+	else {
+		this->textures.clear();
+		textured = false;
+	}
+
+	this->ambient    = colors[0];
+	this->diffuse    = colors[1];
+	this->specular   = colors[2];
+	this->shininess  = shininess;
 
 	// Now that we have all the required data, set the vertex buffers and its attribute pointers.
 	this->setupMesh();
@@ -20,32 +46,44 @@ Mesh::Mesh(vector<Vertex> vertices, vector<GLuint> indices, vector<Texture> text
 void
 Mesh::draw(Program shader)
 {
-	// Bind appropriate textures
-	GLuint diffuseNr = 1;
-	GLuint specularNr = 1;
-	GLuint normalNr = 1;
-	GLuint heightNr = 1;
-	for(GLuint i = 0; i < this->textures.size(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
-		// Retrieve texture number (the N in diffuse_textureN)
-		stringstream ss;
-		string number;
-		string name = this->textures[i].type;
-		if(name == "texture_diffuse")
-			ss << diffuseNr++; // Transfer GLuint to stream
-		else if(name == "texture_specular")
-			ss << specularNr++; // Transfer GLuint to stream
-		else if(name == "texture_normal")
-			ss << normalNr++; // Transfer GLuint to stream
-		else if(name == "texture_height")
-			ss << heightNr++; // Transfer GLuint to stream
-		number = ss.str();
-		// Now set the sampler to the correct texture unit
+	shader.setVec3("material.ambient", ambient);
+	shader.setVec3("material.diffuse", diffuse);
+	shader.setVec3("material.specular", specular);
+	shader.setFloat("material.shininess", shininess);
 
-		glUniform1i(glGetUniformLocation(shader.id, (name + number).c_str()), i);
-		// And finally bind the texture
-		glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
+	if (textured) {
+		// Bind appropriate textures
+		GLuint diffuseNr = 1;
+		GLuint specularNr = 1;
+		GLuint normalNr = 1;
+		GLuint heightNr = 1;
+		for(GLuint i = 0; i < this->textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i); // Active proper texture unit before binding
+			// Retrieve texture number (the N in diffuse_textureN)
+			stringstream ss;
+			string number;
+			string name = this->textures[i].type;
+			if(name == "texture_diffuse")
+				ss << diffuseNr++; // Transfer GLuint to stream
+			else if(name == "texture_specular")
+				ss << specularNr++; // Transfer GLuint to stream
+			else if(name == "texture_normal")
+				ss << normalNr++; // Transfer GLuint to stream
+			else if(name == "texture_height")
+				ss << heightNr++; // Transfer GLuint to stream
+			number = ss.str();
+			// Now set the sampler to the correct texture unit
+			glUniform1i(glGetUniformLocation(shader.id, (name + number).c_str()), i);
+			// And finally bind the texture
+			glBindTexture(GL_TEXTURE_2D, this->textures[i].id);
+		}
+
+		shader.setBool("material.textured", true);
+	}
+
+	else {
+		shader.setBool("material.textured", false);
 	}
 
 	// Draw mesh

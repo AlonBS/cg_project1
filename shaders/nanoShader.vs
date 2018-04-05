@@ -12,6 +12,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+// This is in eye-coordination
+/*
 void main()
 {
     FragPos = vec3(model * vec4(position, 1.0));
@@ -20,5 +22,18 @@ void main()
     
     gl_Position = projection * view * vec4(FragPos, 1.0);
 }
+
+// This is in view coorditations
+*/
+void main()
+{
+	vec4 fragPos4 = view * model * vec4(position, 1.0f);
+    FragPos = vec3(fragPos4) / fragPos4.w;
+    Normal = mat3(transpose(inverse(view * model))) * normal;
+    TexCoords = texCoords;  
+    
+    gl_Position = projection * view * model * vec4(position, 1.0);
+}
+
 
 

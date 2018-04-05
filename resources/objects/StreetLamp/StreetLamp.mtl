@@ -3,22 +3,25 @@
 
 newmtl Glass
 Ns 96.078431
-Ka 0.000000 0.000000 0.000000
+Ka 0.000000 1.000000 0.000000
 Kd 0.800000 0.764745 0.456507
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 0.222222
 illum 2
+map_Kd bricks2.jpg
+map_Ks bricks2.jpg
 
 newmtl Material.001
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.640000 0.640000 0.640000
+Kd 0.040000 0.040000 0.140000
 Ks 0.071429 0.071429 0.071429
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd grey-concrete-texture.jpg
+map_Kd grey-concrete-texture.png
+
 
 newmtl Material.002
 Ns 96.078431
@@ -28,8 +31,10 @@ Ks 0.150794 0.150794 0.150794
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd grey-concrete-texture.jpg
-map_Disp grey-concrete-texture.jpg
+#map_Kd grey-concrete-texture.jpg
+#map_Disp grey-concrete-texture.jpg
+map_Kd grey-concrete-texture.png
+map_Disp grey-concrete-texture.png
 
 newmtl Metal
 Ns 96.078431
@@ -39,10 +44,11 @@ Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000
 illum 2
+#map_Kd grey-concrete-texture2.jpg
 
 newmtl None
 Ns 0
-Ka 0.000000 0.000000 0.000000
+Ka 0.000000 1.000000 0.000000
 Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1

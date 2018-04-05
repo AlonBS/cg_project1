@@ -37,6 +37,7 @@ static GLfloat deltaTime, lastFrame;
 
 // Mouse
 static bool mousePressed = false;
+static bool increase = false;
 
 // Camera
 static Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -58,6 +59,7 @@ typedef struct Lamp {
 // Object
 typedef struct Nano {
 
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0);
 	glm::vec3 ambient = glm::vec3(1.0f, 1.0f, 1.0);
 	glm::vec3 diffuse = glm::vec3(1.0f, 0.5f, 0.31);
 	glm::vec3 specular = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -250,8 +252,6 @@ static void doZoom()
 static void
 updateLights()
 {
-
-
 	if (pressedKeys[GLFW_KEY_8]) {
 		updateVector3f(nano.ambient, INCREASE, 0.002, 1.0);
 	}
@@ -269,6 +269,14 @@ updateLights()
 			nano.shininess /= 2.0f;
 		}
 	}
+
+	if (pressedKeys[GLFW_KEY_1]) {
+		nano.color.r >= 1.0f ? nano.color.r : nano.color.r += 0.002;
+	}
+	if (pressedKeys[GLFW_KEY_2]) {
+		nano.color.r <= 0.0f ? nano.color.r : nano.color.r -= 0.002;
+	}
+
 }
 
 
@@ -288,11 +296,11 @@ static void updateUniforms()
 	nanoProgram->setVec3("light.ambient", lamp.ambient);
 	nanoProgram->setVec3("light.diffuse", lamp.diffuse);
 	nanoProgram->setVec3("light.specular", lamp.specular);
-	nanoProgram->setVec3("material.color", 1.0f, 1.0f, 1.0f);
-	nanoProgram->setVec3("material.ambient", nano.ambient);
-	nanoProgram->setVec3("material.diffuse", nano.diffuse);
-	nanoProgram->setVec3("material.specular", nano.specular);
-	nanoProgram->setFloat("material.shininess", nano.shininess);
+	nanoProgram->setVec3("g_color", nano.color);
+	nanoProgram->setVec3("g_ambient", nano.ambient);
+	nanoProgram->setVec3("g_diffuse", nano.diffuse);
+	nanoProgram->setVec3("g_specular", nano.specular);
+	nanoProgram->setFloat("g_shininess", nano.shininess);
 
 }
 
@@ -414,11 +422,16 @@ int main(int argc, char* argv[])
 	// load Models
 	lampModel = new Model(FileSystem::getPath("Project_1/resources/objects/cube/cube.obj").c_str());
 	nanoModel = new Model(FileSystem::getPath("Project_1/resources/objects/nanosuit/nanosuit.obj").c_str());
+//	nanoModel = new Model(FileSystem::getPath("Project_1/resources/objects/StreetLamp/StreetLamp.obj").c_str());
+//	nanoModel = new Model(FileSystem::getPath("Project_1/resources/objects/bugatti/bugatti.obj").c_str());
+//	nanoModel = new Model(FileSystem::getPath("Project_1/resources/objects/pencil-obj/pencil.obj").c_str());
+//	nanoModel = new Model(FileSystem::getPath("Project_1/resources/objects/Rabbit/Rabbit.obj").c_str());
 
 
 	// Game loop
 	while(!glfwWindowShouldClose(window))
 	{
+
 		// Clear the colorbuffer
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -11,10 +11,11 @@ using namespace std;
 #include <GL/glew.h> // Contains all the necessery OpenGL includes
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <SOIL.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include <FreeImage.h>
 
 #include <mesh.h>
 
@@ -53,7 +54,10 @@ private:
     vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, string typeName);
 
 
-    GLint loadTextureFromFile(const char* path, string directory, bool gamma = false);
+//    GLint loadTextureFromFile(const char* path, string directory, bool gamma = false);
+
+
+    GLuint loadTexture(const char* filename, GLenum minificationFilter = GL_LINEAR, GLenum magnificationFilter = GL_LINEAR);
 };
 
 

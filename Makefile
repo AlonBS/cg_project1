@@ -3,8 +3,7 @@ INCFLAGS  = -I /usr/include/GL -I ./utilities/include
 
 #INCFLAGS += -I /mit/6.837/public/include/vecmath
 
-LINKFLAGS  = -lGL -lGLU -lassimp  -lSOIL
-LINKFLAGS  += -L ./libs -lGLEW -lglfw
+LINKFLAGS  = -lGL -lGLU -lassimp  -lSOIL -lGLEW -lglfw -L ./utilities/libs -lfreeimage
 #LINKFLAGS += -L /mit/6.837/public/lib -lvecmath
 #LINKFLAGS += -L ~/programming/Computer_Graphics_Exs/Computer_Graphics/Ex0_MIT/mit-vecmath/output -lvecmath
 
